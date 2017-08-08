@@ -1,64 +1,81 @@
-var wsocket;
+var webSocket;
 var serviceLocation = "ws://localhost:8080/WebChat/chat/";
-var $nickName;
+var $login;
 var $message;
-var $chatWindow;
+var $chatHistory;
 var room = "";
 
 function onMessageReceived(evt) {
     var msg = JSON.parse(evt.data);
-    var $messageLine = $('<tr>'
-        + '<td class="date">' + msg.date + '</td>'
-        + '<td class="user label label-info">' + msg.sender + '</td>'
-        + '<td class="message badge">' + msg.message + '</td>'
-        + '</tr>');
-    $chatWindow.append($messageLine);
-}
+    var $messageLine = $(
+          '<div class="response-line">'
+            + '<span class="badge date">' + msg.date + '</span>'
+            + '<span class="label label-info user" style="background-color:' + msg.userColor + '">' + msg.sender + '</span>'
+            + '<span class="message">' + msg.message + '</span>'
+        + '</div>');
 
-function sendMessage() {
-    var msg = '{"message":"' + $message.val() + '", "sender":"' + $nickName.val() + '", "date":""}';
-    wsocket.send(msg);
-    $message.val('').focus();
+
+    $chatHistory.append($messageLine);
 }
 
 function connectToChatserver() {
-    room = $('#chatroom').find('option:selected').val();
-    wsocket = new WebSocket(serviceLocation + room);
-    wsocket.onmessage = onMessageReceived;
+    room = $('#form-login-chatroom').find('option:selected').val();
+    webSocket = new WebSocket(serviceLocation + room + '/' + $login.val());
+    webSocket.onmessage = onMessageReceived;
+}
+
+function sendMessage() {
+    var msg = '{"message":"' + $message.val() + '", "sender":"' + $login.val() + '", "date":""}';
+    webSocket.send(msg);
+    $message.val('').focus();
 }
 
 function leaveRoom() {
-    wsocket.close();
-    $chatWindow.empty();
+    webSocket.close();
+    $chatHistory.empty();
     $('.chat-wrapper').hide();
     $('.chat-login').show();
     $('.chat-signup').show();
-    $nickName.focus();
+    $login.focus();
 }
 
 $(document).ready(function() {
-    $nickName = $('#nickname');
+    $login = $('#login');
     $message = $('#message');
-    $chatWindow = $('#response');
+    $chatHistory = $('#chat-history');
     $('.chat-wrapper').hide();
-    $nickName.focus();
+    $('.chat-signup-input').hide();
 
-    $('#btn-login').click(function(evt) {
+    $login.focus();
+
+    $('#btn-login').click(function (evt) {
         evt.preventDefault();
         connectToChatserver();
-        $('.chat-room-login-info').text('Chat # '+$nickName.val() + "@" + room);
+        $('.chat-room-login-info').text('Chat # '+$login.val() + "@" + room);
         $('.chat-login').hide();
         $('.chat-signup').hide();
         $('.chat-wrapper').show();
         $message.focus();
     });
 
-    $('#do-chat').submit(function(evt) {
+    $('#btn-signup').click(function (evt) {
+       evt.preventDefault();
+       $('.chat-login').hide();
+       $('.chat-signup').hide();
+       $('.chat-signup-input').show();
+    });
+
+    $('#btn-signup-submit').click(function (evt) {
+      evt.preventDefault();
+      //registration process
+    });
+
+    $('#do-chat').submit(function (evt) {
         evt.preventDefault();
         sendMessage()
     });
 
-    $('#leave-room').click(function(){
+    $('#leave-room').click(function (evt) {
         leaveRoom();
     });
 });

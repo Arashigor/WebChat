@@ -11,26 +11,38 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@ServerEndpoint(value = "/chat/{room}", encoders = MessageEncoder.class, decoders = MessageDecoder.class)
+@ServerEndpoint(value = "/chat/{room}/{login}", encoders = MessageEncoder.class, decoders = MessageDecoder.class)
 public class ChatEndpoint {
 
     private final Logger log = Logger.getLogger(getClass().getName());
-    private static volatile Set<Session> peers = new CopyOnWriteArraySet<>();
+    private static volatile Set<Session> PEERS = new CopyOnWriteArraySet<>();
+    private static final String[] COLORS = {"red","grey","green","orange","coral","crimson","cyan","yellow"};
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("room") String room) throws IOException {
-        log.info(">> new session \"" + session.getId() + "\" bound to room " + room);
+    public void onOpen(Session session, @PathParam("room") String room, @PathParam("login") String login) throws IOException {
+        log.info(">> new session \"" + session.getId() + "\" bound to room " + room + ". User: " + login);
         session.getUserProperties().put("room", room);
-        peers.add(session);
+        session.getUserProperties().put("login", login);
+
+        int c = ThreadLocalRandom.current().nextInt(0,8);
+        session.getUserProperties().put("userColor", COLORS[c]);
+
+        PEERS.add(session);
     }
 
     @OnMessage
     public void onMessage(Session session, Message message) throws IOException, EncodeException {
         String room = (String) session.getUserProperties().get("room");
-        for (Session peer : peers) {
+        String color = (String) session.getUserProperties().get("userColor");
+
+        message.setDate();
+        message.setColor(color);
+
+        for (Session peer : PEERS) {
             if (room.equals(peer.getUserProperties().get("room"))) {
                 peer.getAsyncRemote().sendObject(message);
             }
@@ -40,14 +52,16 @@ public class ChatEndpoint {
     @OnClose
     public void onClose(Session session) throws IOException {
         String room = (String) session.getUserProperties().get("room");
-        log.info(">> session closed for user: " + session.getId());
+        String login = (String) session.getUserProperties().get("login");
+        log.info(">> session closed for user: " + session.getId() + "("+ login +")");
 
-        peers.remove(session);
+        PEERS.remove(session);
 
         Message message = new Message();
         message.setSender("Server");
-        message.setMessage(session.getId() + " has left " + room + ".");
-        for (Session peer : peers) {
+        message.setMessage(login + " has left " + room + " room.");
+        message.setDate();
+        for (Session peer : PEERS) {
             if (room.equals(peer.getUserProperties().get("room"))) {
                 peer.getAsyncRemote().sendObject(message);
             }

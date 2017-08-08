@@ -29,7 +29,7 @@ body {
     margin-bottom: 10px;
 }
 
-.form-login input[type="text"], .form-login input[type="password"] {
+.form-login input[type="text"], .form-login input[type="password"], .form-login input[type="email"] {
     font-size: 16px;
     height: auto;
     margin-bottom: 15px;
@@ -56,19 +56,17 @@ body {
     margin-top: 20px;
 }
 
-.chat-signup {
 
-}
-
-#signup {
+/* Sign Up */
+#signup, #do-signup {
     padding: 10px 29px 29px;
 }
 
-#btn-signup {
-
+#btn-signup-submit {
+    margin-top: 15px;
 }
 
-/* Chat Elements*/
+/* Chat Elements */
 .chat-wrapper {
     font-family: 'Open Sans', sans-serif;
     max-width: 600px;
@@ -118,7 +116,35 @@ body {
 
 /*Chat History*/
 
-.date {
-    width: 160px;
-    font-size: 10px;
+#chat-history {
+    font-family: 'Open Sans', sans-serif;
+    max-width: 550px;
+}
+
+.response-line {
+    max-width: 500px !important;
+    padding: 4px 4px 4px 4px;
+    margin: 3px 3px 3px 3px;
+    background-color: #f9f9f9;
+    border: 1px solid #4a45e5;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 1px rgb(49, 47, 103);
+    -moz-box-shadow: 0 1px 1px rgb(49, 47, 103);
+    box-shadow:0 1px 1px rgb(49, 47, 103);
+}
+
+.user, .message {
+    color: #151529;
+}
+
+.message {
+    word-wrap: break-word !important;
+}
+
+.date, .message, .user {
+    display: inline;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
 }
