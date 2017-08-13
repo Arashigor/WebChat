@@ -51,6 +51,7 @@ public class ChatEndpoint {
                 } else {
                     if (message.getReceiver().equals(peer.getUserProperties().get("login")) ||
                             message.getSender().equals(peer.getUserProperties().get("login"))) {
+                        message.setSender(message.getSender() + " to " + message.getReceiver());
                         peer.getAsyncRemote().sendObject(message);
                     }
                 }
