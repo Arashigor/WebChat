@@ -42,9 +42,18 @@ public class ChatEndpoint {
         message.setDate();
         message.setColor(color);
 
+        System.out.println(message);
+
         for (Session peer : PEERS) {
             if (room.equals(peer.getUserProperties().get("room"))) {
-                peer.getAsyncRemote().sendObject(message);
+                if (message.getWhom().isEmpty()) {
+                    peer.getAsyncRemote().sendObject(message);
+                } else {
+                    if (message.getWhom().equals(peer.getUserProperties().get("login")) ||
+                            message.getSender().equals(peer.getUserProperties().get("login"))) {
+                        peer.getAsyncRemote().sendObject(message);
+                    }
+                }
             }
         }
     }

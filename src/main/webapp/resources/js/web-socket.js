@@ -25,7 +25,16 @@ function connectToChatserver() {
 }
 
 function sendMessage() {
-    var msg = '{"message":"' + $message.val() + '", "sender":"' + $login.val() + '", "date":""}';
+    var msg;
+
+    if ($message.val().startsWith('#')) {
+        msg = '{"message":"' + $message.val() + '", "sender":"' + $login.val() + '", "date":"", "whom":"' +
+            $message.val().substring(1, $message.val().indexOf(" ")) + '"}';
+    }
+    else {
+        msg = '{"message":"' + $message.val() + '", "sender":"' + $login.val() + '", "date":"", "whom":""}';
+    }
+
     webSocket.send(msg);
     $message.val('').focus();
 }
