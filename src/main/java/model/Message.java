@@ -1,13 +1,12 @@
 package model;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public class Message {
     private String message;
     private String sender;
     private String userColor;
-    private String whom;
+    private String receiver;
 
     private String date;
     private transient final static Calendar now = Calendar.getInstance();
@@ -53,12 +52,12 @@ public class Message {
         this.sender = sender;
     }
 
-    public String getWhom() {
-        return whom;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setWhom(String whom) {
-        this.whom = whom;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     @Override
@@ -67,7 +66,7 @@ public class Message {
                 "message='" + message + '\'' +
                 ", sender='" + sender + '\'' +
                 ", userColor='" + userColor + '\'' +
-                ", whom='" + whom + '\'' +
+                ", receiver='" + receiver + '\'' +
                 ", date='" + date + '\'' +
                 '}';
     }

@@ -28,11 +28,11 @@ function sendMessage() {
     var msg;
 
     if ($message.val().startsWith('#')) {
-        msg = '{"message":"' + $message.val() + '", "sender":"' + $login.val() + '", "date":"", "whom":"' +
+        msg = '{"message":"' + $message.val() + '", "sender":"' + $login.val() + '", "date":"", "receiver":"' +
             $message.val().substring(1, $message.val().indexOf(" ")) + '"}';
     }
     else {
-        msg = '{"message":"' + $message.val() + '", "sender":"' + $login.val() + '", "date":"", "whom":""}';
+        msg = '{"message":"' + $message.val() + '", "sender":"' + $login.val() + '", "date":"", "receiver":""}';
     }
 
     webSocket.send(msg);

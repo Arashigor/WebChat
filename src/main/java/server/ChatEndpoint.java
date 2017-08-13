@@ -46,10 +46,10 @@ public class ChatEndpoint {
 
         for (Session peer : PEERS) {
             if (room.equals(peer.getUserProperties().get("room"))) {
-                if (message.getWhom().isEmpty()) {
+                if (message.getReceiver().isEmpty()) {
                     peer.getAsyncRemote().sendObject(message);
                 } else {
-                    if (message.getWhom().equals(peer.getUserProperties().get("login")) ||
+                    if (message.getReceiver().equals(peer.getUserProperties().get("login")) ||
                             message.getSender().equals(peer.getUserProperties().get("login"))) {
                         peer.getAsyncRemote().sendObject(message);
                     }
