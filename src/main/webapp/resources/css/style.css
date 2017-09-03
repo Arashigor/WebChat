@@ -119,6 +119,8 @@ body {
 #chat-history {
     font-family: 'Open Sans', sans-serif;
     max-width: 550px;
+    height: 370px;
+    overflow: scroll;
 }
 
 .response-line {

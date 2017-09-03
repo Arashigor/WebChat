@@ -22,6 +22,10 @@ function onMessage(evt) {
            </div>`);
 
     $chatHistory.append($messageLine);
+
+    //scroll
+    let obj = document.getElementById("chat-history");
+    obj.scrollTop = obj.scrollHeight;
 }
 
 function connect() {
