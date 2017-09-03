@@ -10,7 +10,9 @@ import javax.websocket.EndpointConfig;
 public class MessageDecoder implements Decoder.Text<Message> {
     @Override
     public Message decode(String json) throws DecodeException {
-        return new GsonBuilder().create().fromJson(json, Message.class);
+        return new GsonBuilder()
+                .create()
+                .fromJson(json, Message.class);
     }
 
     @Override
@@ -20,11 +22,9 @@ public class MessageDecoder implements Decoder.Text<Message> {
 
     @Override
     public void init(EndpointConfig config) {
-
     }
 
     @Override
     public void destroy() {
-
     }
 }

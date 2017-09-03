@@ -3,13 +3,25 @@ package model;
 import java.util.Calendar;
 
 public class Message {
+
     private String message;
     private String sender;
     private String userColor;
     private String receiver;
-
     private String date;
+
     private transient final static Calendar now = Calendar.getInstance();
+
+    public Message() {
+    }
+
+    public Message(Message m) {
+        this.message = m.message;
+        this.sender = m.sender;
+        this.userColor = m.userColor;
+        this.receiver = m.receiver;
+        this.date = m.date;
+    }
 
     public String getColor() {
         return userColor;
@@ -24,16 +36,8 @@ public class Message {
     }
 
     public void setDate() {
-        this.date = now.get(Calendar.DAY_OF_MONTH) + "/" + now.get(Calendar.MONTH) + " " +
-                now.get(Calendar.HOUR) + ":" + now.get(Calendar.MINUTE);
-    }
-
-    public String getUserColor() {
-        return userColor;
-    }
-
-    public void setUserColor(String userColor) {
-        this.userColor = userColor;
+        this.date = now.get(Calendar.HOUR) + ":" + now.get(Calendar.MINUTE)
+                    + " " + now.get(Calendar.DAY_OF_MONTH) + "/" + now.get(Calendar.MONTH);
     }
 
     public String getMessage() {
@@ -58,6 +62,10 @@ public class Message {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public boolean hasReceiver() {
+        return receiver.length() > 0;
     }
 
     @Override

@@ -10,16 +10,16 @@ import javax.websocket.EndpointConfig;
 public class MessageEncoder implements Encoder.Text<Message> {
     @Override
     public String encode(Message message) throws EncodeException {
-         return new GsonBuilder().create().toJson(message);
+         return new GsonBuilder()
+                 .create()
+                 .toJson(message);
     }
 
     @Override
     public void init(EndpointConfig config) {
-
     }
 
     @Override
     public void destroy() {
-
     }
 }

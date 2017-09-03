@@ -1,42 +1,66 @@
-var webSocket;
-var serviceLocation = "ws://localhost:8080/WebChat/chat/";
-var $login;
-var $message;
-var $chatHistory;
-var room = "";
+let webSocket;
+let serviceLocation = 'ws://localhost:8080/WebChat/chat/';
 
-function onMessageReceived(evt) {
-    var msg = JSON.parse(evt.data);
-    var $messageLine = $(
-          '<div class="response-line">'
-            + '<span class="badge date">' + msg.date + '</span>'
-            + '<span class="label label-info user" style="background-color:' + msg.userColor + '">' + msg.sender + '</span>'
-            + '<span class="message">' + msg.message + '</span>'
-        + '</div>');
+let $login;
+let $messageField;
+let $chatHistory;
+let room = '';
 
+let colors = ["red","grey","green","orange","coral","crimson","cyan","yellow"];
+let userColor = '';
+
+function onMessage(evt) {
+    let receivedMessage = JSON.parse(evt.data);
+
+    let $messageLine = $(
+        `<div class="response-line">
+              <span class="badge date">${receivedMessage.date}</span>
+              <span class="label label-info user" style="background-color:${receivedMessage.userColor}">
+                        ${receivedMessage.sender}
+              </span>
+              <span class="message">${receivedMessage.message}</span>
+           </div>`);
 
     $chatHistory.append($messageLine);
 }
 
-function connectToChatserver() {
+function connect() {
     room = $('#form-login-chatroom').find('option:selected').val();
-    webSocket = new WebSocket(serviceLocation + room + '/' + $login.val());
-    webSocket.onmessage = onMessageReceived;
+    userColor = colors[Math.floor(Math.random()*colors.length)];
+    webSocket = new WebSocket(serviceLocation + 'room/' + $login.val());
+    webSocket.onmessage = onMessage;
 }
 
 function sendMessage() {
-    var msg;
+    webSocket.send(formatMessage($messageField.val()));
+    $messageField.val('').focus();
+}
 
-    if ($message.val().startsWith('#')) {
-        msg = '{"message":"' + $message.val().substring($message.val().indexOf(" ")) + '", "sender":"' + $login.val() + '", "date":"", "receiver":"' +
-            $message.val().substring(1, $message.val().indexOf(" ")) + '"}';
-    }
-    else {
-        msg = '{"message":"' + ' ' + $message.val() + '", "sender":"' + $login.val() + '", "date":"", "receiver":""}';
+function formatMessage(unformattedMessage) {
+    let formattedMessage;
+
+    let date = new Date();
+    let dateStr = `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}`;
+
+    if (unformattedMessage.startsWith('#')) {
+        formattedMessage = `{
+                    "message":"${$messageField.val().substring($messageField.val().indexOf(" "))}", 
+                    "sender":"${$login.val()}",
+                    "userColor":"${userColor}", 
+                    "date":"${dateStr}", 
+                    "receiver":"${$messageField.val().substring(1, $messageField.val().indexOf(" "))}"
+                }`;
+    } else {
+        formattedMessage = `{
+                    "message":"${$messageField.val().substring($messageField.val().indexOf(" "))}", 
+                    "sender":"${$login.val()}",
+                    "userColor":"${userColor}", 
+                    "date":"${dateStr}", 
+                    "receiver":""
+                }`;
     }
 
-    webSocket.send(msg);
-    $message.val('').focus();
+    return formattedMessage;
 }
 
 function leaveRoom() {
@@ -50,24 +74,27 @@ function leaveRoom() {
 
 $(document).ready(function() {
     $login = $('#login');
-    $message = $('#message');
+    $messageField = $('#message-field');
     $chatHistory = $('#chat-history');
     $('.chat-wrapper').hide();
     $('.chat-signup-input').hide();
 
     $login.focus();
 
-    $('#btn-login').click(function (evt) {
+    $('#btn-login').click(function(evt) {
         evt.preventDefault();
-        connectToChatserver();
-        $('.chat-room-login-info').text('Chat # '+$login.val() + "@" + room);
+
+        connect();
+
+        $('.chat-room-login-info').text(`Chat #${$login.val()} @${room}`);
         $('.chat-login').hide();
         $('.chat-signup').hide();
         $('.chat-wrapper').show();
-        $message.focus();
+
+        $messageField.focus();
     });
 
-    $('#btn-signup').click(function (evt) {
+    $('#btn-signup').click(function(evt) {
        evt.preventDefault();
        $('.chat-login').hide();
        $('.chat-signup').hide();
@@ -79,12 +106,12 @@ $(document).ready(function() {
       //registration process
     });
 
-    $('#do-chat').submit(function (evt) {
+    $('#do-chat').submit(function(evt) {
         evt.preventDefault();
         sendMessage()
     });
 
-    $('#leave-room').click(function (evt) {
+    $('#leave-room').click(function() {
         leaveRoom();
     });
 });
