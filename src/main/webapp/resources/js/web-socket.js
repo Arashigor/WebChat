@@ -2,6 +2,7 @@ let webSocket;
 let serviceLocation = 'ws://localhost:8080/WebChat/chat/';
 
 let $login;
+let $password;
 let $messageField;
 let $chatHistory;
 let room = '';
@@ -76,8 +77,13 @@ function leaveRoom() {
     $login.focus();
 }
 
+function verifyUser() {
+    return false;
+}
+
 $(document).ready(function() {
     $login = $('#login');
+    $password = $('#password');
     $messageField = $('#message-field');
     $chatHistory = $('#chat-history');
     $('.chat-wrapper').hide();
@@ -88,14 +94,18 @@ $(document).ready(function() {
     $('#btn-login').click(function(evt) {
         evt.preventDefault();
 
-        connect();
+        if (verifyUser()) {
+            connect();
 
-        $('.chat-room-login-info').text(`Chat #${$login.val()} @${room}`);
-        $('.chat-login').hide();
-        $('.chat-signup').hide();
-        $('.chat-wrapper').show();
+            $('.chat-room-login-info').text(`Chat #${$login.val()} @${room}`);
+            $('.chat-login').hide();
+            $('.chat-signup').hide();
+            $('.chat-wrapper').show();
 
-        $messageField.focus();
+            $messageField.focus();
+        } else {
+            $('.form-login-heading').text('Wrong Credentials =(');
+        }
     });
 
     $('#btn-signup').click(function(evt) {
@@ -105,7 +115,7 @@ $(document).ready(function() {
        $('.chat-signup-input').show();
     });
 
-    $('#btn-signup-submit').click(function (evt) {
+    $('#btn-signup-submit').click(function(evt) {
       evt.preventDefault();
       //registration process
     });

@@ -2,3 +2,4 @@ target
 .idea
 *.iml
 Procfile
+src/main/resources/META-INF/persistence.xml
