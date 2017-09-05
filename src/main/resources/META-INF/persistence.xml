@@ -2,7 +2,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
   http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" version="2.1">
 
-    <persistence-unit name="TechChatUsers" transaction-type="JTA">
+    <persistence-unit name="WebChatUsers" transaction-type="RESOURCE_LOCAL">
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
@@ -10,7 +10,7 @@
 
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/Dmitry"/>
             <property name="javax.persistence.jdbc.user" value="Dmitry"/>
-            <property name="javax.persistence.jdbc.password" value="ArashigorStrickes20"/>
+            <property name="javax.persistence.jdbc.password" value="***REMOVED***"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
 
             <property name="hibernate.show_sql" value="true"/>

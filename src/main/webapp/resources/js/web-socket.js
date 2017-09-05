@@ -78,7 +78,23 @@ function leaveRoom() {
 }
 
 function verifyUser() {
-    return false;
+    let verified = true;
+
+    let data = "login="+ $login.val() +"&password=" + $password.val();
+
+    $.ajax({
+        async : false,
+        type: "POST",
+        url: "doLogin",
+        data: data,
+        success: function (data) {
+            if (data !== "true") {
+               verified = false;
+            }
+        }
+    });
+
+    return verified;
 }
 
 $(document).ready(function() {
@@ -95,6 +111,7 @@ $(document).ready(function() {
         evt.preventDefault();
 
         if (verifyUser()) {
+
             connect();
 
             $('.chat-room-login-info').text(`Chat #${$login.val()} @${room}`);
@@ -104,7 +121,8 @@ $(document).ready(function() {
 
             $messageField.focus();
         } else {
-            $('.form-login-heading').text('Wrong Credentials =(');
+            $('.form-login-heading').text('Wrong Credentials =(')
+                .css({'color':'#E54D5C'});
         }
     });
 
