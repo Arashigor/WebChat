@@ -34,6 +34,10 @@ function connect() {
     userColor = colors[Math.floor(Math.random()*colors.length)];
     webSocket = new WebSocket(serviceLocation + 'room/' + $login.val());
     webSocket.onmessage = onMessage;
+
+    $('#login-header').text('Hello again! :)')
+        .css({'color':'#151529'});
+
 }
 
 function sendMessage() {
@@ -77,10 +81,9 @@ function leaveRoom() {
     $login.focus();
 }
 
-function verifyUser() {
+function isExistedUser() {
     let verified = true;
-
-    let data = "login="+ $login.val() +"&password=" + $password.val();
+    let data = "login=" + $login.val() + "&password=" + $password.val();
 
     $.ajax({
         async : false,
@@ -97,6 +100,42 @@ function verifyUser() {
     return verified;
 }
 
+function isSignedUp() {
+    let $loginSignup = $('#login-signup');
+    let $passwordSignup = $('#password-signup');
+    let $passwordSignupRepat = $('#password-signup-repeat');
+    let $emailSignup = $('#email-signup');
+
+    let signedUp = true;
+
+    if ($passwordSignup.val() !== $passwordSignupRepat.val()) {
+        signedUp =  false;
+    } else {
+        let emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!emailRegexp.test($emailSignup.val())) {
+            signedUp = false;
+        } else {
+            let data = "login=" + $loginSignup.val()
+                + "&password=" + $passwordSignup.val()
+                + "&email=" + $emailSignup.val();
+
+            $.ajax({
+                async : false,
+                type: "POST",
+                url: "doSignup",
+                data: data,
+                success: function (data) {
+                    if (data !== "true") {
+                        signedUp = false;
+                    }
+                }
+            });
+        }
+    }
+
+    return signedUp;
+}
+
 $(document).ready(function() {
     $login = $('#login');
     $password = $('#password');
@@ -110,8 +149,7 @@ $(document).ready(function() {
     $('#btn-login').click(function(evt) {
         evt.preventDefault();
 
-        if (verifyUser()) {
-
+        if (isExistedUser()) {
             connect();
 
             $('.chat-room-login-info').text(`Chat #${$login.val()} @${room}`);
@@ -121,7 +159,7 @@ $(document).ready(function() {
 
             $messageField.focus();
         } else {
-            $('.form-login-heading').text('Wrong Credentials =(')
+            $('#login-header').text('Wrong Credentials =(')
                 .css({'color':'#E54D5C'});
         }
     });
@@ -135,7 +173,22 @@ $(document).ready(function() {
 
     $('#btn-signup-submit').click(function(evt) {
       evt.preventDefault();
-      //registration process
+
+      if (isSignedUp()) {
+          $('.chat-signup-input').hide();
+          $('.chat-login').show();
+          $('.chat-signup').show();
+
+          $('#login-header').text('Enter your data')
+              .css({'color':'#151529'});
+
+          $login.focus();
+
+      } else {
+          $('#signup-header').text('Something isn\'t valid :(')
+              .css({'color':'#E54D5C'});
+      }
+
     });
 
     $('#do-chat').submit(function(evt) {

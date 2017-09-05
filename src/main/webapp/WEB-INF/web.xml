@@ -18,6 +18,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SingupController</servlet-name>
-        <url-pattern>/doSignUp</url-pattern>
+        <url-pattern>/doSignup</url-pattern>
     </servlet-mapping>
 </web-app>

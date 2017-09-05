@@ -4,32 +4,35 @@ import model.User;
 
 import javax.persistence.*;
 
-public class UserDaoImp {
+public class UserDao {
 
     public boolean persist(User entity) {
         boolean persisted = true;
 
-        EntityManager entityManager = EntityManagerProvider.getEntityManager();
-
+        EntityManager entityManager = null;
         try {
+            entityManager = EntityManagerProvider.getEntityManager();
             entityManager.getTransaction().begin();
             entityManager.persist(entity);
+            entityManager.getTransaction().commit();
         } catch (EntityExistsException e) {
             persisted = false;
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
         } finally {
-            entityManager.getTransaction().commit();
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
 
         return persisted;
     }
 
-    //TODO redo as strings and normal exc handler
     public boolean find(User user) {
-
         EntityManager entityManager = null;
         User requestedUser = null;
         try {
-
             entityManager = EntityManagerProvider.getEntityManager();
             entityManager.getTransaction().begin();
 
@@ -41,10 +44,15 @@ public class UserDaoImp {
             requestedUser = (User) query.getSingleResult();
 
             entityManager.getTransaction().commit();
-        } catch (NoResultException e) {
-            e.printStackTrace();
+
+        } catch (PersistenceException e) {
+            if (entityManager != null) {
+                entityManager.getTransaction().rollback();
+            }
         } finally {
-            entityManager.close();
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
         return requestedUser != null;
     }

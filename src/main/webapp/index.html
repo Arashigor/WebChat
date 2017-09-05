@@ -9,7 +9,6 @@
 
 	<script src="resources/js/jquery-3.2.1.min.js"></script>
 	<script src="resources/js/web-socket.js"></script>
-	<script src="resources/js/styles.js"></script>
 
 	<link href="resources/css/bootstrap.css" rel="stylesheet">
 	<link href="resources/css/bootstrap-theme.css" rel="stylesheet">
@@ -19,7 +18,7 @@
 <body>
 	<div class="container chat-login">
 		<form class="form-login">
-			<h2 class="form-login-heading">Welcome back!</h2>
+			<h2 id="login-header" class="form-login-heading">Welcome back!</h2>
 			<label for="login">Login</label>
 			<input id="login" type="text">
 			<label for="password">Password</label>
@@ -45,7 +44,7 @@
 
 	<div class="container chat-signup-input">
 		<form class="form-login" id="do-signup">
-			<h2>Enter your data</h2>
+			<h2 id="signup-header" class="form-login-heading">Enter your data</h2>
 			<label for="login-signup">Login</label><input id="login-signup" type="text">
 			<label for="password-signup">Password</label><input id="password-signup" type="password">
 			<label for="password-signup-repeat">Repeat Password</label><input id="password-signup-repeat" type="password">

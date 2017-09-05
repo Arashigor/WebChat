@@ -1,6 +1,6 @@
 package controller;
 
-import dao.UserDaoImp;
+import dao.UserDao;
 import model.User;
 
 import javax.servlet.ServletException;
@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class LoginController extends HttpServlet {
 
-    private final UserDaoImp userDao = new UserDaoImp();
+    private final UserDao userDao = new UserDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -20,10 +20,8 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         User user = new User(req.getParameter("login"), req.getParameter("password"));
         boolean found = userDao.find(user);
-
         resp.getWriter().write(String.valueOf(found));
     }
 }

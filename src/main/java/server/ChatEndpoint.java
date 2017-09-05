@@ -31,7 +31,6 @@ public class ChatEndpoint {
 
     @OnMessage
     public void onMessage(Session session, Message message) throws IOException, EncodeException {
-
         String sendersRoom = session.getPathParameters().get("room");
 
         for (Session peer : PEERS) {
