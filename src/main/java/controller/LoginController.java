@@ -11,8 +11,6 @@ import java.io.IOException;
 
 public class LoginController extends HttpServlet {
 
-    private final UserDao userDao = new UserDao();
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doPost(req,resp);
@@ -20,8 +18,11 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        UserDao userDao = new UserDao();
+
         User user = new User(req.getParameter("login"), req.getParameter("password"));
         boolean found = userDao.find(user);
+
         resp.getWriter().write(String.valueOf(found));
     }
 }
