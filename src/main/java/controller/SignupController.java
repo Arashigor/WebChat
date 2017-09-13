@@ -19,7 +19,6 @@ public class SignupController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UserDao userDao = new UserDao();
-
         User user = new User(req.getParameter("login"), req.getParameter("password"),
                                                 req.getParameter("email"));
 

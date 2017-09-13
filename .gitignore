@@ -2,4 +2,4 @@ target
 .idea
 *.iml
 src/main/resources/
-src/test/
+src/test/resources/

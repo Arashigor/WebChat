@@ -15,7 +15,7 @@ public class UserDao {
             entityManager.getTransaction().begin();
             entityManager.persist(entity);
             entityManager.getTransaction().commit();
-        } catch (EntityExistsException e) {
+        } catch (PersistenceException e) {
             persisted = false;
             if (entityManager != null) {
                 entityManager.getTransaction().rollback();
