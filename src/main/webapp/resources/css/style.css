@@ -41,7 +41,6 @@ body {
 #form-login-chatroom {
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none;
     background: #f9f9f9 url("../img/arrow.png") no-repeat 207px;
 
     font-size: 16px;

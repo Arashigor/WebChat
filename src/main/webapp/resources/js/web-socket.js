@@ -30,9 +30,10 @@ function onMessage(evt) {
 }
 
 function connect() {
-    room = $('#form-login-chatroom').find('option:selected').val();
+    room = $('.form-control').find('option:selected').val();
     userColor = colors[Math.floor(Math.random()*colors.length)];
-    webSocket = new WebSocket(serviceLocation + 'room/' + $login.val());
+    webSocket = new WebSocket(serviceLocation + room + '/' + $login.val());
+    console.log(serviceLocation + room + '/' + $login.val());
     webSocket.onmessage = onMessage;
 
     $('#login-header').text('Hello again! :)')
@@ -61,7 +62,7 @@ function formatMessage(unformattedMessage) {
                 }`;
     } else {
         formattedMessage = `{
-                    "message":"${$messageField.val().substring($messageField.val().indexOf(" "))}", 
+                    "message":"${$messageField.val()}", 
                     "sender":"${$login.val()}",
                     "userColor":"${userColor}", 
                     "date":"${dateStr}", 
